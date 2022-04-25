@@ -213,7 +213,7 @@ formulaire.addEventListener("submit", function(e){
         product: produitLocalStorage,
     }
     
-    const promise1 = fetch('http://localhost:3000/api/order', {
+    const promise1 = fetch('http://localhost:3000/api/products/order', {
         method: "POST",
         headers: {
             "Content-Type":"application/json",
