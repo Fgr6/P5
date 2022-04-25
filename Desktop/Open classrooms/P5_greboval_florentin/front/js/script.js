@@ -8,11 +8,12 @@ async function requete(){
     .then((response) => 
     response.json().then((data) => articles = data));
 }
+
 /* fonction de selection de l'id Items sur le DOM */
 async function cardKanap() {
     await requete();
     let items = document.getElementById("items");
-/* boucle for pour créer et parametrer les éléments de l'item */
+    /* boucle for pour créer et parametrer les éléments de l'item */
     for (let i = 0; i < articles.length; i++) {
 
        let lien = document.createElement("a");
