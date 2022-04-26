@@ -210,24 +210,31 @@ formulaire.addEventListener("submit", function(e){
         address: adresse.value,
         city: ville.value,
         email: email.value,
-        product: produitLocalStorage,
     }
-    
+    let products = []
+    orderId = {}
+    for (let w = 0; w < produitLocalStorage.id; w++){
+           orderId = produitLocalStorage[w].id;
+           products.push(orderId);
+    }
+    console.log(products);
     const promise1 = fetch('http://localhost:3000/api/products/order', {
         method: "POST",
         headers: {
             "Content-Type":"application/json",
         },
-        body: JSON.stringify(contact),
+        body: JSON.stringify({contact, products}),
         
     })
-    console.log(contact);
-    promise1.then( async(response)=>{
-        try{
+    .then(async(response) => {
+        try {
             console.log(response);
-        }catch(e){
-            console.log(e);
+            const contenu = await response.json();
+            console.log(contenu);
+        }catch (e){
+
         }
+        
     })
 })
 
