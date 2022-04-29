@@ -165,8 +165,9 @@ for (let z = 0; z < changeQte.length; z++){
 
 let formulaire = document.querySelector(".cart__order__form");
 
+
 formulaire.addEventListener("submit", function(e){
-    e.preventDefault();
+
     var prenom = document.getElementById("firstName");
     var nom = document.getElementById("lastName");
     var adresse = document.getElementById("address");
@@ -211,13 +212,16 @@ formulaire.addEventListener("submit", function(e){
         city: ville.value,
         email: email.value,
     }
+    
     let products = []
-    orderId = {}
-    for (let w = 0; w < produitLocalStorage.id; w++){
-           orderId = produitLocalStorage[w].id;
-           products.push(orderId);
+    let local = produitLocalStorage;
+    
+
+    for(let d = 0; d < local.length; d++){
+    
+        products.push(local[d].id);
     }
-    console.log(products);
+
     const promise1 = fetch('http://localhost:3000/api/products/order', {
         method: "POST",
         headers: {
@@ -226,16 +230,18 @@ formulaire.addEventListener("submit", function(e){
         body: JSON.stringify({contact, products}),
         
     })
-    .then(async(response) => {
-        try {
-            console.log(response);
-            const contenu = await response.json();
-            console.log(contenu);
-        }catch (e){
-
-        }
-        
+    
+    .then(function(response){
+       return response.json();
     })
+    .then(function(data){
+        resultOrderId = data.orderId;
+        orderId = resultOrderId;
+        window.location.href = "../html/confirmation.html?orderId=" + orderId; 
+    });
+
+    localStorage.removeItem("produit");
+   
 })
 
 

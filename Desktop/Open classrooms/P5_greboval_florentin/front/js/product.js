@@ -55,9 +55,7 @@ boutonEnvoie.addEventListener("click", (e)=>{
         couleur: document.querySelector("#colors").value,
         quantité: nbQte,
     }
-
-    console.log(valeurArticle);
-
+    
     const fenetreConfirm = () =>{
         if(window.confirm( `${article.name} a bien été ajouté au panier`)){
             window.location.href = "../html/cart.html";
