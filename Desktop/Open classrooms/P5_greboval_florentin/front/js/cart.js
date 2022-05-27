@@ -1,7 +1,8 @@
+ /* On requête le tableau produit du Local Storage */
 let produitLocalStorage = JSON.parse(localStorage.getItem("produit"));
 
 const elementDom = document.querySelector("#cart__items");
-
+ /* Si le panier est vide on afficher le message suivant sur la page */
 if(produitLocalStorage === null || produitLocalStorage == 0){
     let panierVide = "Votre panier est vide !"
     document.querySelector("h1").textContent = panierVide;
@@ -12,8 +13,9 @@ if(produitLocalStorage === null || produitLocalStorage == 0){
     let qtePanier = document.getElementById("totalQuantity");
     qtePanier.textContent = "0";
 }else{
+     /* Si il y a des produits dans le panier alors on vient les afficher comme ceci est calculer la quantité total et le prix total */
     let prixTotal = [];
-
+    /* Calcul du prix total du panier */
     for (let p = 0; p < produitLocalStorage.length; p++){
     let prixProduitPanier = produitLocalStorage[p].prix * produitLocalStorage[p].quantité;
 
@@ -25,7 +27,7 @@ if(produitLocalStorage === null || produitLocalStorage == 0){
 
 
     let qteTotal = [];
-
+    /* Calcul de la quantité total du panier */
     for (let q = 0; q < produitLocalStorage.length; q++){
     var nombreQte = produitLocalStorage[q].quantité;
     var quantitéTotalPanier = parseInt(nombreQte);
@@ -44,7 +46,7 @@ if(produitLocalStorage === null || produitLocalStorage == 0){
     let qtePanier = document.getElementById("totalQuantity");
     qtePanier.textContent = qteTot;
 
-
+    /* Boucle pour chaque produit du Local Storage on récupère les données et on les affiche dans le DOM */
     for (let i = 0; i < produitLocalStorage.length; i++){
 
         let articleItem = document.createElement("article");
@@ -119,19 +121,18 @@ if(produitLocalStorage === null || produitLocalStorage == 0){
     }
 
 }
-
 let suppElement = document.querySelectorAll(".deleteItem");
 
-
+ /* On écoute le click du bouton supprimer*/
 for (let s = 0; s < suppElement.length; s++){
     suppElement[s].addEventListener("click" , (event) =>{
         event.preventDefault();
-
+         /* Au click sur ce bouton on vient récupérer l'id et la couleur du produit à supprimer puis à laide de filter on garde tout les autres produits */
         let idSupp = produitLocalStorage[s].id && produitLocalStorage[s].couleur;
 
         produitLocalStorage = produitLocalStorage.filter(el => el.id && el.couleur !== idSupp);
         
-
+        /* On envoie le nouveau panier dans le local storage, on afficher un message d'alert et on actutalise la page */
         localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
         alert("Le produit a été supprimer du panier");
         window.location.href = "../html/cart.html";
@@ -139,7 +140,7 @@ for (let s = 0; s < suppElement.length; s++){
     })
 }
 let changeQte = document.querySelectorAll(".itemQuantity");
-
+ /* Au changement de quantité d'un produit , on récupère la nouvelle quantité on l'envoie dans le Local Storage et on actualise la page pour que le calcul de la nouvelle quantité total et du nouveau prix total s'effectue */
 for (let c = 0; c < changeQte.length; c++){
     changeQte[c].addEventListener('change' , (event) => {
         const result = document.querySelector('#totalQuantity');
@@ -154,7 +155,7 @@ for (let c = 0; c < changeQte.length; c++){
 }
 
 let changePrix = document.querySelector("#totalPrice");
-
+ /* Quand la quantité d'un produit change on vient récupérer les nouvelles quandités pour effectuer le nouveau calcul du prix total */
 for (let z = 0; z < changeQte.length; z++){
     changeQte[z].addEventListener('change' , (event) => {
     var newPrix = produitLocalStorage[z].prix * produitLocalStorage[z].quantité;
@@ -165,7 +166,7 @@ for (let z = 0; z < changeQte.length; z++){
 
 let formulaire = document.querySelector(".cart__order__form");
 
-
+ /* Lors de l'envoie du formulaire de commande on affiche un message d'erreur si une case est pas ou mal remplie */
 formulaire.addEventListener("submit", function(e){
 
     var prenom = document.getElementById("firstName");
@@ -181,21 +182,33 @@ formulaire.addEventListener("submit", function(e){
     var erreurEmail = document.getElementById("emailErrorMsg");
     
 
-    if (prenom.value == ""){
+    if (prenom.value.match(/^[a-zA-Z\-]+$/)){
+
+    }else{
         e.preventDefault();
-        erreurPrenom.innerHTML = "Veuillez écrire votre Prénom.";
+        erreurPrenom.innerHTML = "Veuillez écrire un prénom valide.";
+        return false;
     }
-    if (nom.value == ""){
+    if (nom.value.match(/^[a-zA-Z\-]+$/)){
+       
+    }else{
         e.preventDefault();
-        erreurNom.innerHTML = "Veuillez écrire votre Nom.";
+        erreurNom.innerHTML = "Veuillez écrire un nom valide.";
+        return false;
     }
-    if (adresse.value == ""){
+    if (adresse.value.match(/^[a-zA-Z0-9\s,.'-]{3,}$/)){
+        
+    }else{
         e.preventDefault();
-        erreurAdresse.innerHTML = "Veuillez écrire votre adresse.";
+        erreurAdresse.innerHTML = "Veuillez écrire une adresse valide.";
+        return false;
     }
-    if (ville.value == ""){
+    if (ville.value.match(/^[a-zA-Z\-]+$/)){
+        
+    }else{
         e.preventDefault();
-        erreurVille.innerHTML = "Veuillez écrire votre Ville.";
+        erreurVille.innerHTML = "Veuillez écrire une ville valide.";
+        return false;
     }
         
     if (email.value.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)){
@@ -203,8 +216,9 @@ formulaire.addEventListener("submit", function(e){
     }else{
             e.preventDefault();
             erreurEmail.innerHTML = "Veuillez écrire un email valide.";
+            return false;
     }
-
+     /* On créer une constante contact pour récupérer les données du formulaire */
     const contact = {
         firstName: prenom.value,
         lastName: nom.value,
@@ -216,12 +230,12 @@ formulaire.addEventListener("submit", function(e){
     let products = []
     let local = produitLocalStorage;
     
-
+     /* On récupère aussi les ID des produits du panier et on les stock dans un tableau */
     for(let d = 0; d < local.length; d++){
     
         products.push(local[d].id);
     }
-
+    /* On effectue une requete POST sur l'API pour obtenir le numéro de commande */
     const promise1 = fetch('http://localhost:3000/api/products/order', {
         method: "POST",
         headers: {
@@ -230,7 +244,7 @@ formulaire.addEventListener("submit", function(e){
         body: JSON.stringify({contact, products}),
         
     })
-    
+     /* On récupère la réponse de notre requete et on met l'Order ID dans l'url de redirection*/
     .then(function(response){
        return response.json();
     })
@@ -239,7 +253,7 @@ formulaire.addEventListener("submit", function(e){
         orderId = resultOrderId;
         window.location.href = "../html/confirmation.html?orderId=" + orderId; 
     });
-
+    /* On supprime les éléments du panier */
     localStorage.removeItem("produit");
    
 })

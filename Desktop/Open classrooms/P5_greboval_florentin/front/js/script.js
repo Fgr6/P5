@@ -1,19 +1,19 @@
 let url = 'http://localhost:3000/api/products';
 
-/* variable pour stocker les données de l'api */
+/* Variable pour stocker les données de l'api */
 let articles = [];
-/* fonction de requete sur l'api et sotckage des données */
+/* Fonction de requete sur l'api et sotckage des données */
 async function requete(){
     await fetch(url)
     .then((response) => 
     response.json().then((data) => articles = data));
 }
 
-/* fonction de selection de l'id Items sur le DOM */
+/* Fonction de selection de l'id Items sur le DOM */
 async function cardKanap() {
     await requete();
     let items = document.getElementById("items");
-    /* boucle for pour créer et parametrer les éléments de l'item */
+    /* Boucle for pour créer et parametrer les éléments de l'item */
     for (let i = 0; i < articles.length; i++) {
 
        let lien = document.createElement("a");
@@ -33,7 +33,7 @@ async function cardKanap() {
        description.classList.add("productDescription");
        description.textContent = articles[i].description;
 
-       /* On lui dit que lien et l'enfant de itemps etc pour placer les éléments au bonne endroit*/
+       /* On lui dit que lien et l'enfant de items etc pour placer les éléments dans le Dom*/
        items.appendChild(lien);
        lien.appendChild(article);
        article.append(image,name,description);
